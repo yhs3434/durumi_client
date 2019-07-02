@@ -3,6 +3,8 @@ import HeaderContainer from '../header';
 import HomeContent from '../contents/HomeContent';
 import LoginContainer from '../container/LoginContainer';
 import JoinContent from '../contents/JoinContent';
+import FindTeamContent from '../contents/FindTeamContent';
+import MyTeamContent from '../contents/MyTeamContent';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 
@@ -49,6 +51,8 @@ class RootContainer extends Component {
                     <Route exact path="/" render={()=><HomeContent drawerWidth={this.state.drawerWidth} drawerOpen={this.state.drawerOpen}/>}></Route>
                     <Route path="/login" component={LoginContainer}></Route>
                     <Route path="/join" component={JoinContent}></Route>
+                    <Route path="/match" component={FindTeamContent}></Route>
+                    <Route path='/team' component={MyTeamContent}></Route>
                 </div>
             </Fragment>
         );

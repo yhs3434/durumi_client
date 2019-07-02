@@ -60,14 +60,18 @@ export default function DurumiDrawer({drawerOpen, drawerClick}) {
                             <ListItemText primary={'홈'} />
                         </ListItem>
                     </Link>
-                    <ListItem button key={1}>
-                        <ListItemIcon><InboxIcon /></ListItemIcon>
-                        <ListItemText primary={'매칭'} />
-                    </ListItem>
-                    <ListItem button key={2}>
-                        <ListItemIcon><InboxIcon /></ListItemIcon>
-                        <ListItemText primary={'내 그룹'} />
-                    </ListItem>
+                    <Link to="/match">
+                        <ListItem button key={1}>
+                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemText primary={'매칭'} />
+                        </ListItem >
+                    </Link>
+                    <Link to='/team'>
+                        <ListItem button key={2}>
+                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemText primary={'내 그룹'} />
+                        </ListItem> 
+                    </Link>
                 </List>
                 <Divider />
                 <List>
