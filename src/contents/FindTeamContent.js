@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -11,10 +10,14 @@ import Modal from '@material-ui/core/Modal';
 import { Typography } from '@material-ui/core';
 import TeamListModal from '../components/TeamListModal';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
+import TeamCreateModalContainer from '../container/TeamCreateModalContainer';
 
 class FindTeamContent extends Component {
     state = {
-        modalOpen: false
+        modalOpen: false,
+        createModalOpen: false,
+        teamObject: []
     }
 
     handleModalClick = (idx) => {
@@ -35,41 +38,72 @@ class FindTeamContent extends Component {
         })
     }
 
+    handleCreateModalClick = () => {
+        this.setState({
+            createModalOpen: !this.state.createModalOpen
+        });
+    }
+
+    componentDidMount = async () => {
+        console.log('mounted');
+        const teamList = await axios.get('http://localhost:30001/team/all');
+
+        this.setState({
+            teamObject: [...this.state.teamObject, ...teamList.data]
+        })
+    }
+
     render() {
         const style = {
             root: {
+                display: 'flex',
                 marginLeft: '1rem',
                 marginRight: '1rem',
-                display: 'flex',
                 column: 'row',
                 flexWrap: 'wrap-reverse',
                 justifyContent: 'space-around'
             },
             left: {
-                display: 'flex',
+                display: 'inline-flex',
+                flex: 6,
                 flexDirection: 'column',
-                width: '40rem',
                 marginLeft: '1rem',
                 marginRight: '1rem',
                 marginTop: '2rem',
-                marginBottom: '2rem'
+                marginBottom: '2rem',
+                alignItems: 'center'
             },
             right: {
-                display: 'flex',
+                display: 'inline-flex',
+                flex: 4,
                 flexDirection: 'column',
                 marginLeft: '1rem',
                 marginRight: '1rem',
                 marginTop: '2rem',
-                marginBottom: '2rem'
+                marginBottom: '2rem',
+                alignItems: 'center'
             },
             listItem: {
                 width: '25rem',
                 maxWidth: '1000px',
+                
             },
             avatar: {
                 width: 60,
                 height: 60,
                 marginRight: '2rem'
+            },
+            filterButtons: {
+                display: 'inline-flex',
+                flexDirection: 'row',
+                justifyContent: 'space-arround'
+            },
+            filterButton: {
+                margin: '1rem'
+            },
+            typography: {
+                width: '5rem',
+                margin: '1rem auto'
             }
         };
 
@@ -95,10 +129,10 @@ class FindTeamContent extends Component {
         return (
             <div style={style.root}>
                 <div style={style.left}>
-                    <Typography variant="h5">전체 팀</Typography>
                     <Paper>
+                        <Typography variant="h5" style={style.typography}>전체 팀</Typography>
                         <List>
-                            {[object, object2].map((obj, idx) => (
+                            {this.state.teamObject.map((obj, idx) => (
                                 <React.Fragment key={idx}>
                                     <Button id={idx} onClick={()=>{
                                         return this.handleModalClick(idx)
@@ -128,12 +162,29 @@ class FindTeamContent extends Component {
 
                 <div style={style.right}>
                     <Paper>
-                        <Typography variant='h6'>Filter</Typography>
-                        <div>
-                            <Typography></Typography>
+                        <Typography variant='h6' style={style.typography}>Filter</Typography>
+                        <div style={style.filterButtons}>
+                            <Button 
+                            variant='contained' 
+                            color='primary' 
+                            size='large'
+                            style={style.filterButton}>자동 매칭</Button>
+                            <Button 
+                            variant='contained' 
+                            color='secondary' 
+                            size='large'
+                            onClick={this.handleCreateModalClick}
+                            style={style.filterButton}>팀 만들기</Button>
                         </div>
                     </Paper>
                 </div>
+                <React.Fragment>
+                    <TeamCreateModalContainer
+                    onHistory={this.props.history}
+                    modalOpen={this.state.createModalOpen}
+                    modalClick={this.handleCreateModalClick}
+                    />
+                </React.Fragment>
             </div>
         )
     }

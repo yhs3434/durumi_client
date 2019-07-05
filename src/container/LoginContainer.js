@@ -8,10 +8,6 @@ class LoginContainer extends Component {
         this.props.loginLocal(payload);
     }
 
-    componentDidMount() {
-        console.log('here');   
-    }
-
     render() {
         return(
             <LoginContent 
@@ -25,7 +21,7 @@ class LoginContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    durumiId: state.account.durumiId
+    object: state.account.object
 });
 
 const mapDispatchToProps = (dispatch) => ({

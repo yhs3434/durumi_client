@@ -14,8 +14,6 @@ import Divider from '@material-ui/core/Divider';
 import SendIcon from '@material-ui/icons/SendRounded';
 import { Link as RouterLink } from 'react-router-dom';
 
-import {connect} from 'react-redux';
-
 class Header extends Component {
     state = {
         account: {
@@ -113,7 +111,7 @@ class Header extends Component {
                             </div>
                             <div style={style.container.child2}>
                                 {
-                                    Boolean(this.props.sessionId)
+                                    Boolean(this.props.sessionObject._id)
                                     ?
                                     <IconButton>
                                         <SendIcon style={style.accountButton} fontSize='large'/>
@@ -122,9 +120,9 @@ class Header extends Component {
                                     ''
                                 }
                                 {
-                                    Boolean(this.props.sessionId)
+                                    Boolean(this.props.sessionObject._id)
                                     ? 
-                                    this.props.sessionId
+                                    this.props.sessionObject._id
                                     :
                                     <IconButton onClick={this.accountClick}>
                                         <AccountCircle style={style.accountButton} fontSize='large'/>

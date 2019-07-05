@@ -36,7 +36,7 @@ class LoginContent extends Component {
         } else {
             console.log('Login Success');
             this.props.onLoginLocal({
-                _id: result.data[0]._id
+                object: result.data[0]
             })
             this.props.onHistory.push('/');
         }

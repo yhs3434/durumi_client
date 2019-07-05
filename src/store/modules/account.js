@@ -16,7 +16,8 @@ export const logout = (payload) => {
 }
 
 const initialState = {
-    durumiId: ''
+    login: false,
+    object: {}
 };
 
 const reducer = (state=initialState, action) => {
@@ -24,13 +25,15 @@ const reducer = (state=initialState, action) => {
         case LOGIN_LOCAL:
             return {
                 ...state,
-               durumiId: action.payload._id
+                login: true,    
+                object: action.payload.object
             };
 
         case LOGOUT:
             return {
                 ...state,
-                durumiId: ''
+                login: false,
+                object: {}
             }
         
         default:

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Header from './Header';
 
 class HeaderContainer extends Component {
+
     render() {
         return (
             <Fragment>
@@ -10,7 +11,7 @@ class HeaderContainer extends Component {
                 drawerOpen={this.props.drawerOpen} 
                 drawerClick={this.props.drawerClick} 
                 drawerWidth={this.props.drawerWidth}
-                sessionId={this.props.durumiId}
+                sessionObject={this.props.object}
                 />
             </Fragment>
         )
@@ -18,7 +19,7 @@ class HeaderContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    durumiId: state.account.durumiId
+    object: state.account.object
 })
 
 export default connect(mapStateToProps)(HeaderContainer);

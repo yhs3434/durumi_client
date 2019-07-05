@@ -12,9 +12,6 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
 
 function getModalStyle() {
   const top = 50;
@@ -91,16 +88,18 @@ export default function TeamListModal(props) {
             <Divider/>
             <Box className={classes.memberList}>
                 <Typography>Member</Typography>
-                {props.modalObj.member.map((member, idx) => (
+                {props.modalObj.member.map((member, idx) => {
+                  
+                  return (
                     <Chip 
                         key={idx}
                         className={classes.chip}
                         variant="outlined"
                         avatar={<Avatar><FaceIcon /></Avatar>} 
                         color="primary"
-                        label={member}
+                        label={Boolean(member)} // member.profile.username 으로 대체 해야 함.
                         ></Chip>
-                ))}
+                )})}
             </Box>
 
         <div className={classes.buttons}>
