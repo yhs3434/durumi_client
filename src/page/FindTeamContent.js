@@ -45,7 +45,7 @@ class FindTeamContent extends Component {
     }
 
     componentDidMount = async () => {
-        console.log('mounted');
+        console.log('mount', Boolean(this.props.sessionObj._id))
         const teamList = await axios.get('http://localhost:30001/team/all');
 
         this.setState({
@@ -153,6 +153,8 @@ class FindTeamContent extends Component {
                                         modalClick={()=>this.handleModalClick(idx)}
                                         modalClose={()=>this.handleModalClose(idx)}
                                         modalObj = {obj}
+                                        sessionObj={this.props.sessionObj}
+                                        history={this.props.history}
                                     />
                                 </React.Fragment>
                             ))}
@@ -163,19 +165,23 @@ class FindTeamContent extends Component {
                 <div style={style.right}>
                     <Paper>
                         <Typography variant='h6' style={style.typography}>Filter</Typography>
+                        {!Boolean(this.props.sessionObj._id)
+                            ?<Typography variant='h5'>로그인 해 주세요</Typography>
+                            :
                         <div style={style.filterButtons}>
                             <Button 
-                            variant='contained' 
-                            color='primary' 
-                            size='large'
-                            style={style.filterButton}>자동 매칭</Button>
+                                variant='contained' 
+                                color='primary' 
+                                size='large'
+                                style={style.filterButton}>자동 매칭</Button>
                             <Button 
-                            variant='contained' 
-                            color='secondary' 
-                            size='large'
-                            onClick={this.handleCreateModalClick}
-                            style={style.filterButton}>팀 만들기</Button>
+                                variant='contained' 
+                                color='secondary' 
+                                size='large'
+                                onClick={this.handleCreateModalClick}
+                                style={style.filterButton}>팀 만들기</Button>
                         </div>
+                        }
                     </Paper>
                 </div>
                 <React.Fragment>

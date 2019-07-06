@@ -11,6 +11,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
+import axios from 'axios';
 
 
 function getModalStyle() {
@@ -64,6 +65,25 @@ export default function TeamListModal(props) {
 
   const classes = useStyles();
 
+  const handleJoinButtonClick = async () => {
+    const sessionObj = props.sessionObj;
+    const team = props.modalObj;
+    const data = {
+      userId: sessionObj._id,
+      teamId: team._id
+    }
+
+    const result = await axios.post('http://localhost:30001/team/join', data);
+    props.modalClose();
+    if (result.status === 200){
+      console.log('가입 완료');
+      props.history.push('/team');
+    } else {
+      console.log('가입 실패');
+    }
+    
+  }
+
   return (
     <React.Fragment>
       <Modal
@@ -103,7 +123,10 @@ export default function TeamListModal(props) {
             </Box>
 
         <div className={classes.buttons}>
-            <Button variant="contained" color="primary">참가</Button>
+          {Boolean(props.sessionObj._id)
+            ?<Button variant="contained" color="primary" onClick={handleJoinButtonClick}>참가</Button>
+            :''
+          }
             <Button variant="contained" color="secondary" onClick={props.modalClose}>닫기</Button>
         </div>
         </div>

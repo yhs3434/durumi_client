@@ -58,7 +58,7 @@ export default function TeamCreateModal(props) {
         description: values.description
       },
       hashTag: [...values.hashTag],
-      member: [props.sessionObject]
+      member: [props.sessionObject._id]
     };
 
     const result = await axios.post('http://localhost:30001/team/create', data);

@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
-class MyTeamContent extends Component {
+class Album extends Component {
     render() {
-        return (
+        return(
             <div>
-                MyTeam
+                album
             </div>
         )
     }
 }
 
-export default MyTeamContent;
+export default Album;

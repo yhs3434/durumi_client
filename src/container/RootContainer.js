@@ -1,12 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import HeaderContainer from '../header';
-import HomeContent from '../contents/HomeContent';
+import HomeContent from '../page/HomeContent';
 import LoginContainer from '../container/LoginContainer';
-import JoinContent from '../contents/JoinContent';
-import FindTeamContent from '../contents/FindTeamContent';
-import MyTeamContent from '../contents/MyTeamContent';
+import JoinContent from '../page/JoinContent';
+import FindTeamContent from '../page/FindTeamContent';
+import MyTeamContent from '../page/MyTeamContent';
+import TeamPage from '../page/TeamPage';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
+import {connect} from 'react-redux';
 
 
 class RootContainer extends Component {
@@ -51,12 +53,21 @@ class RootContainer extends Component {
                     <Route exact path="/" render={()=><HomeContent drawerWidth={this.state.drawerWidth} drawerOpen={this.state.drawerOpen}/>}></Route>
                     <Route path="/login" component={LoginContainer}></Route>
                     <Route path="/join" component={JoinContent}></Route>
-                    <Route path="/match" component={FindTeamContent}></Route>
-                    <Route path='/team' component={MyTeamContent}></Route>
+                    <Route path="/match"
+                        render={(props) => <FindTeamContent {...props} sessionObj={this.props.sessionObj}/>}
+                    ></Route>
+                    <Route exact path='/team'
+                        render={(props) => <MyTeamContent {...props} sessionObj={this.props.sessionObj}/>}></Route>
+                    <Route path='/enter'
+                        render={(props) => <TeamPage {...props} sessionObj={this.props.sessionObj}/>}></Route>
                 </div>
             </Fragment>
         );
     }
 }
 
-export default RootContainer;
+const mapStateToProps = (state) => ({
+    sessionObj: state.account.object
+})
+
+export default connect(mapStateToProps)(RootContainer);

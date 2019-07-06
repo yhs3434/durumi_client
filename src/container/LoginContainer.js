@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import LoginContent from '../contents/LoginContent';
+import LoginContent from '../page/LoginContent';
 import {connect} from 'react-redux';
 import * as accountActions from '../store/modules/account';
 
