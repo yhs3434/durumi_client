@@ -57,11 +57,11 @@ export default function TeamCreateModal(props) {
         name: values.name,
         description: values.description
       },
-      hashTag: [...values.hashTag],
+      hashTag: [values.hashTag],
       member: [props.sessionObject._id]
     };
 
-    const result = await axios.post('http://localhost:30001/team/create', data);
+    const result = await axios.post(process.env.REACT_APP_SERVER_URI + '/team/create', data);
 
     props.modalClick();
     if(result.status === 200) {

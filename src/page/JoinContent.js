@@ -38,7 +38,7 @@ class JoinContent extends Component {
 
         // 추후에 포트넘버 숨겨야 함. 또한 로컬호스트도 바꿔줘야 함.
         try {
-            await axios.post('http://localhost:30001/account/join', {
+            await axios.post(process.env.REACT_APP_SERVER_URI + '/account/join', {
                 username, email, password
             });
             

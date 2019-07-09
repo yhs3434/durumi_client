@@ -5,6 +5,7 @@ class Notice extends Component {
         return(
             <div>
                 notice
+                {this.props.teamSelected}
             </div>
         )
     }

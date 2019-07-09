@@ -46,7 +46,7 @@ class FindTeamContent extends Component {
 
     componentDidMount = async () => {
         console.log('mount', Boolean(this.props.sessionObj._id))
-        const teamList = await axios.get('http://localhost:30001/team/all');
+        const teamList = await axios.get(process.env.REACT_APP_SERVER_URI + '/team/all');
 
         this.setState({
             teamObject: [...this.state.teamObject, ...teamList.data]

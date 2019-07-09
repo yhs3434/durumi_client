@@ -3,17 +3,28 @@ import axios from 'axios';
 import MyTeamCard from '../components/MyTeamCard';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
+import * as teamActions from '../store/modules/team';
+import { connect } from 'react-redux';
 
 class MyTeamContent extends Component {
     state = {
-        myTeamList: []
+        myTeamList: [],
+        teamSelected: null
     }
 
-    
+    handleSelectTeam = (team) => {
+        this.setState({
+            selectedTeam: team
+        })
+        this.props.selectTeam({
+            teamSelected: team
+        })
+        this.props.history.push('/enter');
+    }
 
     getMyTeam = async (flag) => {
         if (flag===true){
-            const myTeamList = await axios.get("http://localhost:30001/team/my/"+this.props.sessionObj._id);
+            const myTeamList = await axios.get(process.env.REACT_APP_SERVER_URI + "/team/my/"+this.props.sessionObj._id);
             if (myTeamList.status === 200){
                 return myTeamList.data;
             }
@@ -50,11 +61,10 @@ class MyTeamContent extends Component {
 
         return (
             <Container>
-                MyTeam
                 <div style={style.root}>
                     {this.state.myTeamList.map((team, idx) => (
                         <Box style={style.item}>
-                            <MyTeamCard team={team} />
+                            <MyTeamCard team={team} onSelect={this.handleSelectTeam} />
                         </Box>
                     )
                     )}
@@ -64,4 +74,16 @@ class MyTeamContent extends Component {
     }
 }
 
-export default MyTeamContent;
+const mapStateToProps = (state) => {
+    return ({
+        teamSelected: state.team.teamSelected
+    })
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        selectTeam: (payload) => dispatch(teamActions.selectTeam(payload))
+    })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyTeamContent);

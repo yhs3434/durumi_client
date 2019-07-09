@@ -73,7 +73,7 @@ export default function TeamListModal(props) {
       teamId: team._id
     }
 
-    const result = await axios.post('http://localhost:30001/team/join', data);
+    const result = await axios.post(process.env.REACT_APP_SERVER_URI + '/team/join', data);
     props.modalClose();
     if (result.status === 200){
       console.log('가입 완료');
@@ -117,7 +117,7 @@ export default function TeamListModal(props) {
                         variant="outlined"
                         avatar={<Avatar><FaceIcon /></Avatar>} 
                         color="primary"
-                        label={Boolean(member)} // member.profile.username 으로 대체 해야 함.
+                        label={member} // member.profile.username 으로 대체 해야 함.
                         ></Chip>
                 )})}
             </Box>

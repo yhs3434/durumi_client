@@ -21,7 +21,7 @@ class LoginContent extends Component {
     }
 
     handleLoginClick = async () => {
-        const result = await axios.post('http://localhost:30001/account/login', {
+        const result = await axios.post(process.env.REACT_APP_SERVER_URI +'/account/login', {
             email: this.state.email,
             password: this.state.password
         });
