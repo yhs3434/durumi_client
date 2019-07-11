@@ -29,13 +29,13 @@ class TeamPage extends Component {
     render() {
         const style = {
             root: {
-
+                marginBottom: '5rem'
             },
             bottomNavigation: {
                 width: '100%'
             },
             footer: {
-                position: 'absolute',
+                position: 'fixed',
                 left: 0,
                 bottom: 0,
                 width: '100%',
@@ -79,6 +79,7 @@ class TeamPage extends Component {
 
 const mapStateToProps = (state) => {
     return({
+        userObject: state.account.object,
         teamSelected: state.team.teamSelected
     })
 }

@@ -50,14 +50,6 @@ class HomeContent extends Component {
 
         return(
             <div>
-                <Paper>
-                    <Typography variant="h5" component="h3">
-                        두루미 테스트 두루미 테스트 {drawerOpen.toString()} {this.state._id}
-                    </Typography>
-                    <Typography component="p">
-                        Paper can be used to build surface or other elements for your application.
-                    </Typography>
-                </Paper>
                 <Box>
                     <Card style={style.card}>
                         <CardHeader
