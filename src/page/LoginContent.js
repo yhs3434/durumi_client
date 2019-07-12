@@ -14,6 +14,12 @@ class LoginContent extends Component {
         password: ''
     }
 
+    enterkeyPress = () => {
+        if (window.event.keyCode === 13) {
+            this.handleLoginClick();
+        }
+    }
+
     handleChange = (key) => (event) => {
         this.setState({
             [key]: event.target.value
@@ -87,7 +93,9 @@ class LoginContent extends Component {
                             <TextField label="email" 
                             onChange={this.handleChange('email')} 
                             value={this.state.email}
-                            variant="outlined"/>
+                            variant="outlined"
+                            onKeyUp={this.enterkeyPress}
+                            />
                         </Box>
                         <Box style={style.box}>
                             <TextField label="PASSWORD" 
@@ -95,6 +103,7 @@ class LoginContent extends Component {
                             value={this.state.password}
                             type="password"
                             variant="outlined"
+                            onKeyUp={this.enterkeyPress}
                             />
                         </Box>
                         <Box style={style.boxButton}>

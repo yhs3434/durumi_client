@@ -10,6 +10,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import {connect} from 'react-redux';
 
+import * as accountActions from '../store/modules/account';
+
 
 class RootContainer extends Component {
     state = {
@@ -21,6 +23,16 @@ class RootContainer extends Component {
         this.setState({
           drawerOpen: !this.state.drawerOpen
         });
+    }
+
+    componentDidMount() {
+        if (sessionStorage.userObject === undefined) {
+            console.log('please login');
+        } else {
+            this.props.loginLocal({
+                object: JSON.parse(sessionStorage.userObject)
+            })
+        }
     }
     
     render() {
@@ -70,4 +82,8 @@ const mapStateToProps = (state) => ({
     sessionObj: state.account.object
 })
 
-export default connect(mapStateToProps)(RootContainer);
+const mapDispatchToProps = (dispatch) => ({
+    loginLocal: (payload) => dispatch(accountActions.loginLocal(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RootContainer);

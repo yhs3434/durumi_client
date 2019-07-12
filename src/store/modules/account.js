@@ -23,6 +23,7 @@ const initialState = {
 const reducer = (state=initialState, action) => {
     switch(action.type) {
         case LOGIN_LOCAL:
+            sessionStorage.setItem("userObject", JSON.stringify(action.payload.object));
             return {
                 ...state,
                 login: true,    
