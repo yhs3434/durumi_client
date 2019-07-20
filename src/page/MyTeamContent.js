@@ -38,7 +38,7 @@ class MyTeamContent extends Component {
     }
     
     componentDidMount() {
-        const result = this.getMyTeam(Boolean(this.props.sessionObj._id));
+        const result = this.getMyTeam(Boolean(this.props.sessionObj));
         result.then((res)=>{
             this.setState({
                 myTeamList: [...this.state.myTeamList, ...res]

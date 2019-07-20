@@ -52,14 +52,17 @@ export default function TeamCreateModal(props) {
   };
 
   const handlePostCreate = async () => {
-    const data = {
-      profile: {
-        name: values.name,
-        description: values.description
-      },
-      hashTag: [values.hashTag],
-      member: [props.sessionObject._id]
-    };
+    let data = null;
+    if (props.sessionObject) {
+      data = {
+        profile: {
+          name: values.name,
+          description: values.description
+        },
+        hashTag: [values.hashTag],
+        member: [props.sessionObject._id]
+      };
+    }
 
     const result = await axios.post(process.env.REACT_APP_SERVER_URI + '/team/create', data);
 
@@ -111,14 +114,6 @@ export default function TeamCreateModal(props) {
                 className={classes.textField}
                 value={values.hashTag}
                 onChange={handleChange('hashTag')}
-                margin="dense"
-                variant="outlined"
-            />
-            <TextField 
-                label="sessionObj"
-                className={classes.textField}
-                value={props.sessionObject._id}
-                onChange={handleChange('sessionObj')}
                 margin="dense"
                 variant="outlined"
             />

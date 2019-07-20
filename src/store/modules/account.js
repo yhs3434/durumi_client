@@ -17,7 +17,7 @@ export const logout = (payload) => {
 
 const initialState = {
     login: false,
-    object: {}
+    object: null
 };
 
 const reducer = (state=initialState, action) => {
@@ -31,10 +31,11 @@ const reducer = (state=initialState, action) => {
             };
 
         case LOGOUT:
+            sessionStorage.userObject = undefined;
             return {
                 ...state,
                 login: false,
-                object: {}
+                object: null
             }
         
         default:

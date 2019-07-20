@@ -6,6 +6,7 @@ import JoinContent from '../page/JoinContent';
 import FindTeamContent from '../page/FindTeamContent';
 import MyTeamContent from '../page/MyTeamContent';
 import TeamPage from '../page/TeamPage';
+import ProfilePage from '../page/ProfilePage';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import {connect} from 'react-redux';
@@ -26,11 +27,11 @@ class RootContainer extends Component {
     }
 
     componentDidMount() {
-        if (sessionStorage.userObject === undefined) {
+        if (Boolean(sessionStorage.userObject) || sessionStorage.userObject === "undefined") {
             console.log('please login');
         } else {
             this.props.loginLocal({
-                object: JSON.parse(sessionStorage.userObject)
+                object: sessionStorage.userObject
             })
         }
     }
@@ -72,6 +73,8 @@ class RootContainer extends Component {
                         render={(props) => <MyTeamContent {...props} sessionObj={this.props.sessionObj}/>}></Route>
                     <Route path='/enter'
                         render={(props) => <TeamPage {...props} sessionObj={this.props.sessionObj}/>}></Route>
+                    <Route path='/profile'
+                        render={(props) => <ProfilePage {...props} sessionObj={this.props.sessionObj} />}></Route>
                 </div>
             </Fragment>
         );

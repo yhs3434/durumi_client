@@ -123,7 +123,7 @@ export default function TeamListModal(props) {
             </Box>
 
         <div className={classes.buttons}>
-          {Boolean(props.sessionObj._id)
+          {Boolean(props.sessionObj)
             ?<Button variant="contained" color="primary" onClick={handleJoinButtonClick}>참가</Button>
             :''
           }

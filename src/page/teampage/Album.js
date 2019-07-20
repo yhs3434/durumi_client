@@ -32,7 +32,6 @@ class Album extends Component {
 
         const fileSelected =event.target.files[0];
 
-        console.log(fileSelected);
         this.setState({
             fileSelected: fileSelected
         });
@@ -44,7 +43,9 @@ class Album extends Component {
         let formData = new FormData();
         formData.append('file', fileSelected);
         formData.append('teamId', this.props.teamSelected);
-        formData.append('userId', this.props.userObject._id);
+        if(this.props.userObject) {
+            formData.append('userId', this.props.userObject._id);
+        }
 
         const url = `${process.env.REACT_APP_SERVER_URI}/team/album/upload`;
         const result = await axios.post(url, formData, {

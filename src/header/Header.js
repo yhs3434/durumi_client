@@ -13,12 +13,19 @@ import Menu from '@material-ui/core/Menu';
 import Divider from '@material-ui/core/Divider';
 import SendIcon from '@material-ui/icons/SendRounded';
 import { Link as RouterLink } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 
 class Header extends Component {
     state = {
         account: {
             accountOpen: null
-        }
+        },
+        accountOpenLogin: null
+    }
+
+    handleLogout = () => {
+        this.props.handleLogout();
     }
 
     accountClick = (e) => {
@@ -33,6 +40,18 @@ class Header extends Component {
                 account: {
                     accountOpen: null
                 }
+            });
+        }
+    }
+
+    accountLoginClick = (e) => {
+        if (this.state.accountOpenLogin === null) {
+            this.setState({
+                accountOpenLogin: e.currentTarget
+            });
+        } else {
+            this.setState({
+                accountOpenLogin: null
             });
         }
     }
@@ -93,6 +112,11 @@ class Header extends Component {
             }
         }
 
+        let thumbnailPath = '';
+        if (this.props.sessionObject) {
+            thumbnailPath = `${process.env.REACT_APP_SERVER_URI}/account/${this.props.sessionObject._id}/thumbnail.png`;
+        }
+
         return (
             <div style={style.root}>
                 <CssBaseline/>
@@ -111,7 +135,7 @@ class Header extends Component {
                             </div>
                             <div style={style.container.child2}>
                                 {
-                                    Boolean(this.props.sessionObject._id)
+                                    Boolean(this.props.sessionObject)
                                     ?
                                     <IconButton>
                                         <SendIcon style={style.accountButton} fontSize='large'/>
@@ -120,9 +144,23 @@ class Header extends Component {
                                     ''
                                 }
                                 {
-                                    Boolean(this.props.sessionObject._id)
+                                    Boolean(this.props.sessionObject)
                                     ? 
-                                    this.props.sessionObject._id
+                                    <React.Fragment>
+                                        <Button onClick={this.accountLoginClick}>
+                                            <Avatar src={thumbnailPath} />
+                                        </Button>
+                                        
+                                        <Menu 
+                                            open={Boolean(this.state.accountOpenLogin)}
+                                            anchorEl={this.state.accountOpenLogin}
+                                            onClose={this.accountLoginClick}
+                                            onClick={this.accountLoginClick}
+                                        >
+                                            <RouterLink to="/profile"><MenuItem>Profile</MenuItem></RouterLink>
+                                            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                                        </Menu>
+                                    </React.Fragment>
                                     :
                                     <IconButton onClick={this.accountClick}>
                                         <AccountCircle style={style.accountButton} fontSize='large'/>
@@ -132,6 +170,7 @@ class Header extends Component {
                                 anchorEl={this.state.account.accountOpen}
                                 onClose={this.accountClick}
                                 style={{}}
+                                onClick={this.accountClick}
                                 >
                                     <RouterLink to="/login"><MenuItem>SIGN IN</MenuItem></RouterLink>
                                     <RouterLink to="/join"><MenuItem>SIGN UP</MenuItem></RouterLink>

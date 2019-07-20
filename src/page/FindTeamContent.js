@@ -45,11 +45,10 @@ class FindTeamContent extends Component {
     }
 
     componentDidMount = async () => {
-        console.log('mount', Boolean(this.props.sessionObj._id))
         const teamList = await axios.get(process.env.REACT_APP_SERVER_URI + '/team/all');
 
         this.setState({
-            teamObject: [...this.state.teamObject, ...teamList.data]
+            teamObject: teamList.data
         })
     }
 
@@ -107,25 +106,6 @@ class FindTeamContent extends Component {
             }
         };
 
-        const object = {
-            profile: {
-                name: '두루미',
-                description: '두루미테스트',
-                thumbnail: '/images/KakaoTalk_20190702_185040847.jpg'
-            },
-            member: ['사랑이','두루미'],
-            createdAt: '2019-07-02'
-        }
-        const object2 = {
-            profile: {
-                name: '사랑이',
-                description: '사랑이테스트',
-                thumbnail: '/images/KakaoTalk_20190531_172638815.jpg'
-            },
-            member: [],
-            createdAt: '2019-07-02'
-        }
-
         return (
             <div style={style.root}>
                 <div style={style.left}>
@@ -165,7 +145,7 @@ class FindTeamContent extends Component {
                 <div style={style.right}>
                     <Paper>
                         <Typography variant='h6' style={style.typography}>Filter</Typography>
-                        {!Boolean(this.props.sessionObj._id)
+                        {!Boolean(this.props.sessionObj)
                             ?<Typography variant='h5'>로그인 해 주세요</Typography>
                             :
                         <div style={style.filterButtons}>

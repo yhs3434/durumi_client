@@ -1,13 +1,12 @@
 import React, {Component, Fragment} from 'react';
 import Container from '@material-ui/core/Container';
 import {BottomNavigation, BottomNavigationAction} from '@material-ui/core';
-import {Notice, Album, Board, Calendar, Chat} from './teampage/';
+import {Notice, Album, Calendar, Chat} from './teampage/';
 import { Route } from 'react-router-dom';
 import DateRange from '@material-ui/icons/DateRange';
-import Home from '@material-ui/icons/HomeOutlined';
+import Home from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Forum';
 import Collections from '@material-ui/icons/Collections'
-import Dashboard from '@material-ui/icons/Dashboard';
 import {connect} from 'react-redux';
 
 class TeamPage extends Component {
@@ -30,9 +29,6 @@ class TeamPage extends Component {
         const style = {
             root: {
                 marginBottom: '5rem'
-            },
-            bottomNavigation: {
-                width: '100%'
             },
             footer: {
                 position: 'fixed',
@@ -59,8 +55,6 @@ class TeamPage extends Component {
                             render={(props) => <Calendar {...this.props} sessionObj={this.props.sessionObj}/>}/>
                         <Route path="/enter/chat"
                             render={(props) => <Chat {...this.props} sessionObj={this.props.sessionObj}/>}/>
-                        <Route path="/enter/board"
-                            render={(props) => <Board {...this.props} sessionObj={this.props.sessionObj}/>}/>
                     </div>
                 </Container>
                 <div className='footer' style={style.footer}>
@@ -69,7 +63,6 @@ class TeamPage extends Component {
                         <BottomNavigationAction label="앨범" value="album" icon={<Collections />} />
                         <BottomNavigationAction label="일정" value="calendar" icon={<DateRange />} />
                         <BottomNavigationAction label="채팅" value="chat" icon={<ChatIcon />} />
-                        <BottomNavigationAction label="게시판" value="board" icon={<Dashboard />} />
                     </BottomNavigation>
                 </div>
             </Fragment>
