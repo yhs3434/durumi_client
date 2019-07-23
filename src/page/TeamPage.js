@@ -22,7 +22,7 @@ class TeamPage extends Component {
     }
 
     componentDidMount() {
-        this.props.history.push('/enter/'+this.state.value);
+        this.props.history.replace('/enter/'+this.state.value);
     }
 
     render() {

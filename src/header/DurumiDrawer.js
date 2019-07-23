@@ -7,11 +7,14 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import {Link} from 'react-router-dom';
+import CloudIcon from '@material-ui/icons/Cloud';
+import SearchIcon from '@material-ui/icons/Search';
+import PeopleIcon from '@material-ui/icons/People';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const drawerWidth = 240;
 
@@ -56,20 +59,20 @@ export default function DurumiDrawer({drawerOpen, drawerClick}) {
                 <List>
                     <Link to="/">
                         <ListItem button key={0}>
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
-                            <ListItemText primary={'홈'} />
+                            <ListItemIcon><CloudIcon /></ListItemIcon>
+                            <ListItemText primary={'SNS'} />
                         </ListItem>
                     </Link>
                     <Link to="/match">
                         <ListItem button key={1}>
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
-                            <ListItemText primary={'매칭'} />
+                            <ListItemIcon><SearchIcon /></ListItemIcon>
+                            <ListItemText primary={'Find Team'} />
                         </ListItem >
                     </Link>
                     <Link to='/team'>
                         <ListItem button key={2}>
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
-                            <ListItemText primary={'내 그룹'} />
+                            <ListItemIcon><PeopleIcon /></ListItemIcon>
+                            <ListItemText primary={'My Team'} />
                         </ListItem> 
                     </Link>
                 </List>
@@ -77,7 +80,7 @@ export default function DurumiDrawer({drawerOpen, drawerClick}) {
                 <List>
                 {['Setting'].map((text, index) => (
                     <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                        <ListItemIcon>{index % 2 === 0 ? <SettingsIcon /> : <MailIcon />}</ListItemIcon>
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}

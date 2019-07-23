@@ -63,7 +63,7 @@ class MyTeamContent extends Component {
             <Container>
                 <div style={style.root}>
                     {this.state.myTeamList.map((team, idx) => (
-                        <Box style={style.item}>
+                        <Box style={style.item} key={idx}>
                             <MyTeamCard team={team} onSelect={this.handleSelectTeam} />
                         </Box>
                     )

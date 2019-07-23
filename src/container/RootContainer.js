@@ -7,6 +7,7 @@ import FindTeamContent from '../page/FindTeamContent';
 import MyTeamContent from '../page/MyTeamContent';
 import TeamPage from '../page/TeamPage';
 import ProfilePage from '../page/ProfilePage';
+import ProfileEditPage from '../page/ProfileEditPage';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import {connect} from 'react-redux';
@@ -75,6 +76,8 @@ class RootContainer extends Component {
                         render={(props) => <TeamPage {...props} sessionObj={this.props.sessionObj}/>}></Route>
                     <Route path='/profile'
                         render={(props) => <ProfilePage {...props} sessionObj={this.props.sessionObj} />}></Route>
+                    <Route path='/edit/profile'
+                        render={(props) => <ProfileEditPage {...props} sessionObj={this.props.sessionObj} />}></Route>
                 </div>
             </Fragment>
         );

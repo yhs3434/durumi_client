@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +15,10 @@ import SendIcon from '@material-ui/icons/SendRounded';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import PersonIcon from '@material-ui/icons/Person';
+import RunIcon from '@material-ui/icons/DirectionsRun';
 
 class Header extends Component {
     state = {
@@ -109,6 +113,9 @@ class Header extends Component {
             },
             typography: {
                 marginLeft: '1rem'
+            },
+            menuList: {
+                border: '1px solid #d3d4d5'
             }
         }
 
@@ -154,11 +161,33 @@ class Header extends Component {
                                         <Menu 
                                             open={Boolean(this.state.accountOpenLogin)}
                                             anchorEl={this.state.accountOpenLogin}
+                                            getContentAnchorEl={null}
+                                            anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'center',
+                                            }}
+                                            transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'center',
+                                            }}
                                             onClose={this.accountLoginClick}
                                             onClick={this.accountLoginClick}
+                                            style={style.menuList}
                                         >
-                                            <RouterLink to="/profile"><MenuItem>Profile</MenuItem></RouterLink>
-                                            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                                            <RouterLink to="/profile">
+                                                <MenuItem>
+                                                    <ListItemIcon>
+                                                        <PersonIcon/>
+                                                    </ListItemIcon>
+                                                    <ListItemText primary="Profile"/>
+                                                </MenuItem>
+                                            </RouterLink>
+                                            <MenuItem onClick={this.handleLogout}>
+                                                <ListItemIcon>
+                                                    <RunIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Logout"/>
+                                            </MenuItem>
                                         </Menu>
                                     </React.Fragment>
                                     :
@@ -167,10 +196,19 @@ class Header extends Component {
                                     </IconButton>
                                 }
                                 <Menu open={Boolean(this.state.account.accountOpen)} 
-                                anchorEl={this.state.account.accountOpen}
-                                onClose={this.accountClick}
-                                style={{}}
-                                onClick={this.accountClick}
+                                    anchorEl={this.state.account.accountOpen}
+                                    getContentAnchorEl={null}
+                                    anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                    }}
+                                    onClose={this.accountClick}
+                                    onClick={this.accountClick}
+                                    style={style.menuList}
                                 >
                                     <RouterLink to="/login"><MenuItem>SIGN IN</MenuItem></RouterLink>
                                     <RouterLink to="/join"><MenuItem>SIGN UP</MenuItem></RouterLink>

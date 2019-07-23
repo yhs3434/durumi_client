@@ -4,6 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {List, ListItem, ListItemText, ListItemIcon} from '@material-ui/core';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import {Link} from 'react-router-dom';
+
 import axios from 'axios';
 
 
@@ -22,6 +26,10 @@ class ProfilePage extends Component {
             console.log(teamList);
             this.setState({
                 teamJoined: teamList
+            })
+        } else {
+            this.setState({
+                teamJoined: []
             })
         }
     }
@@ -88,20 +96,24 @@ class ProfilePage extends Component {
                 justifyContent: 'space-around'
             },
             image: {
-                width: "200px",
-                height: "200px",
+                width: "20rem",
+                height: "20rem",
                 
             },
             childRoot: {
                 display: 'inline-flex',
                 flexDirection: 'column',
-                marginLeft: "0.5rem",
-                marginRight: "0.5rem"
+                marginLeft: "1rem",
+                marginRight: "1rem"
             },
             childChildRoot: {
                 display: 'inline-flex',
                 flexDirection: 'row',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
+                marginTop: "0.3rem",
+                marginBottom: '0.3rem',
+                marginLeft: "1rem",
+                marginRight: "1rem"
             },
             button: {
                 marginTop: "0.2rem"
@@ -112,7 +124,24 @@ class ProfilePage extends Component {
             thumbnailButton: {
                 padding: 0,
                 marginTop: "0.4rem"
-            }
+            },
+            typography: {
+                width: '6rem',
+                marginRight: '0.6rem'
+            },
+            divider: {
+                marginTop: '1rem',
+                marginBottom: '1rem'
+            },
+            thumbnailButtons: {
+                display: 'inline-flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                margin: '1rem'
+            },
+            editButton: {
+                alignSelf: 'flex-end'
+            },
         }
 
         return(
@@ -126,18 +155,32 @@ class ProfilePage extends Component {
                                 name="file" 
                                 style={{display: 'none'}} 
                                 onChange={this.handleChangeFile}/>
-                            <Button variant="outlined" color="primary" style={style.thumbnailButton}>
-                                <label style={style.label} htmlFor="fileUpload">Upload a photo</label>
-                            </Button>
-                            <Button variant="outlined" color="secondary" 
-                                style={style.thumbnailButton}
-                                onClick={this.handleRemoveThumbnail}>
-                                <label style={style.label}>Remove a photo</label>
-                            </Button>
+                            <div style={style.thumbnailButtons}>
+                                <Button variant="outlined" color="primary" style={style.thumbnailButton}>
+                                    <label style={style.label} htmlFor="fileUpload">Upload</label>
+                                </Button>
+                                <Button variant="outlined" color="secondary" 
+                                    style={style.thumbnailButton}
+                                    onClick={this.handleRemoveThumbnail}>
+                                    <label style={style.label}>Remove</label>
+                                </Button>
+                            </div>
                         </div>
+
                         <div style={style.childRoot}>
+                            <div style={style.editButton}>
+                                <Link to="/edit/profile" >
+                                    <Button variant="outlined">
+                                        edit
+                                    </Button>
+                                </Link>
+                            </div>
+                            <Divider style={style.divider}/>
+                            
                             <div style={style.childChildRoot}>
-                                <Typography>이름</Typography>
+                                <Typography style={style.typography}>
+                                    Name
+                                </Typography>
                                 <Typography>
                                 {
                                     Boolean(this.props.sessionObj)
@@ -147,17 +190,99 @@ class ProfilePage extends Component {
                                 </Typography>
                             </div>
                             <div style={style.childChildRoot}>
-                                <Typography>학력</Typography>
+                                <Typography style={style.typography}>Email</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.email
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
                             </div>
                             <div style={style.childChildRoot}>
-                                <Typography>전공</Typography>
+                                <Typography style={style.typography}>
+                                    Birth
+                                </Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.profile.birth
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
                             </div>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>
+                                    Gender
+                                </Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.profile.gender
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <Divider style={style.divider}/>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>Job</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.job
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>Office</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.office
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>School</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.school
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>Major</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.major
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <Divider style={style.divider}/>
+                            <div style={style.childChildRoot}>
+                                <Typography style={style.typography}>Interest</Typography>
+                                <Typography>
+                                {
+                                    Boolean(this.props.sessionObj)
+                                    ?this.props.sessionObj.interest
+                                    :'로그인 해주세요'
+                                }
+                                </Typography>
+                            </div>
+                            <Divider style={style.divider}/>
                         </div>
+
                         <div style={style.childRoot}>
-                            <Typography>참여중인 팀</Typography>
+                            <Typography style={{alignSelf: "center"}}>참여중인 팀</Typography>
                             <List>
                                 {this.state.teamJoined.map((item, idx) => (
-                                    <ListItem>
+                                    <ListItem key={idx}>
                                         <ListItemIcon>
                                             <FavoriteBorderIcon/>
                                         </ListItemIcon>

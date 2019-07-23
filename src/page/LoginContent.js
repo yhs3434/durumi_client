@@ -41,10 +41,11 @@ class LoginContent extends Component {
             })
         } else {
             console.log('Login Success');
+            console.log('history', this.props.onHistory);
             this.props.onLoginLocal({
                 object: result.data[0]
             })
-            this.props.onHistory.push('/');
+            this.props.onHistory.goBack();
         }
     }
 
