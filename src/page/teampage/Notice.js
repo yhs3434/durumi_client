@@ -24,6 +24,10 @@ class Notice extends Component {
         board: []
     }
 
+    handlePostClick = () => {
+        this.props.history.push('/enter/board/post');
+    }
+
     handleCardClick = (event) => {
         console.log(event.currentTarget.id);
         const eventId = event.currentTarget.id;
@@ -158,7 +162,7 @@ class Notice extends Component {
 
                 <div className="board" style={style.childRoot}>
                     <Typography variant="h3">board</Typography>
-                    <IconButton style={{alignSelf: 'flex-end', color: "skyblue"}}><AddButton/></IconButton>
+                    <IconButton onClick={this.handlePostClick} style={{alignSelf: 'flex-end', color: "skyblue"}}><AddButton/></IconButton>
                     <Card style={style.card}>
                         <CardHeader 
                             avatar={<Avatar>

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import Container from '@material-ui/core/Container';
 import {BottomNavigation, BottomNavigationAction} from '@material-ui/core';
-import {Notice, Album, Calendar, Chat} from './teampage/';
+import {Notice, Album, Calendar, Chat, BoardPost} from './teampage/';
 import { Route } from 'react-router-dom';
 import DateRange from '@material-ui/icons/DateRange';
 import Home from '@material-ui/icons/Home';
@@ -55,6 +55,8 @@ class TeamPage extends Component {
                             render={(props) => <Calendar {...this.props} sessionObj={this.props.sessionObj}/>}/>
                         <Route path="/enter/chat"
                             render={(props) => <Chat {...this.props} sessionObj={this.props.sessionObj}/>}/>
+                        <Route path="/enter/board/post"
+                            render={(props) => <BoardPost {...this.props} {...props}/>}/>
                     </div>
                 </Container>
                 <div className='footer' style={style.footer}>
