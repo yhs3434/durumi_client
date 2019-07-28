@@ -39,7 +39,7 @@ class TeamPage extends Component {
             },
             bottomNavigation: {
                 height: '100%',
-                background: 'linear-gradient(45deg, #2196f3 30%, #20cbf3 90%)'
+                background: 'linear-gradient(45deg, #F0F0FF 30%, #50fbf3 90%)'
             }
         }
 

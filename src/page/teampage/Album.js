@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
+import { EventAvailableTwoTone } from '@material-ui/icons';
 
 class Album extends Component {
     state = {
         path: [],
-        fileSelected: {}
+        fileSelected: {},
+        clicked: null
     }
 
     getImage = async () => {
@@ -25,6 +28,21 @@ class Album extends Component {
         })
 
         return;
+    }
+
+    handleClickImg = (event) => {
+        this.setState({
+            clicked: {
+                modal: true,
+                path: event.target.id
+            }
+        });
+    }
+
+    handleCloseModal = () => {
+        this.setState({
+            clicked: null
+        });
     }
 
     handleChangeFile = async (event) => {
@@ -59,22 +77,9 @@ class Album extends Component {
     
     componentDidMount() {
         this.getImage();
-        /*
-        this.getImage().then((result) => {
-            const parentElem = document.getElementById('albumRoot');
-            result.map((elem, idx) => {
-                let newElem = React.createElement("img", {src: elem, style: "width: 20rem; height: 20rem; margin: 1rem;"});
-                //newElem.innerHTML = `<img src=${elem} style="width: 20rem; height: 20rem; margin: 1rem;"/>`;
-                console.log(newElem);
-            })
-        })
-        */
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState !== this.state){
-            this.getImage();
-        }
     }
 
     render() {
@@ -101,26 +106,49 @@ class Album extends Component {
             },
             uploadButton: {
                 padding: 0
+            },
+            modalImg: {
+                
+                maxWidth: '80%',
+                maxHeight: '80%'
+            },
+            modalRoot: {
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
             }
         }
         return(
-            <div>
-                <div style={style.header}>
-                    <input type="file" id="fileUpload" name="file" style={{display: 'none'}} onChange={this.handleChangeFile}/>
-                    <Button variant="contained" color="primary" size="large" style={style.uploadButton}><label style={style.label} htmlFor="fileUpload">업로드</label></Button>
+            <React.Fragment>
+                <div>
+                    <div style={style.header}>
+                        <input type="file" id="fileUpload" name="file" style={{display: 'none'}} onChange={this.handleChangeFile}/>
+                        <Button variant="contained" color="primary" size="large" style={style.uploadButton}><label style={style.label} htmlFor="fileUpload">업로드</label></Button>
+                    </div>
+                    <div id='albumRoot' style={style.root}>
+                        {
+                            this.state.path.map((path, idx) => {
+                                return (
+                                    <Button key={idx} style={style.imgButton} onClick={this.handleClickImg}>
+                                        <img id={path} src={path} style={style.img}/>
+                                    </Button>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
-                <div id='albumRoot' style={style.root}>
-                    {
-                        this.state.path.map((path, idx) => {
-                            return (
-                                <Button key={idx} style={style.imgButton}>
-                                    <img src={path} style={style.img}/>
-                                </Button>
-                            )
-                        })
-                    }
+                <div>
+                    <Modal style={style.modalRoot} open={Boolean(this.state.clicked)} onClose={this.handleCloseModal} onClick={this.handleCloseModal}>
+                        {
+                            Boolean(this.state.clicked)
+                            ?
+                            <img alt='modalImg' src={this.state.clicked.path} style={style.modalImg}/>
+                            :
+                            ''
+                        }
+                    </Modal>
                 </div>
-            </div>
+            </React.Fragment>
         )
     }
 }

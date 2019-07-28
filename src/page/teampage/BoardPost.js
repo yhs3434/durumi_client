@@ -15,6 +15,10 @@ class BoardPost extends Component {
         });
     }
 
+    handleCancelClick = () => {
+        this.props.history.goBack();
+    }
+
     handlePostClick = async () => {
         if(Boolean(this.state.title) && Boolean(this.state.content)) {
             let data = this.state;
@@ -44,6 +48,12 @@ class BoardPost extends Component {
             },
             textfield: {
                 width: "60%"
+            },
+            buttons: {
+                display: 'inline-flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                width: '17rem'
             }
         }
         return(
@@ -68,7 +78,15 @@ class BoardPost extends Component {
                     style={style.textfield}
                 />
                 <Divider style={style.divider}/>
-                <Button onClick={this.handlePostClick} variant='outlined'>Post</Button>
+                <div style={style.buttons}>
+                    <Button onClick={this.handlePostClick} variant='outlined'>Post</Button>
+                    <Button 
+                        variant='outlined' 
+                        color='secondary'
+                        onClick={this.handleCancelClick}>
+                        Cancel
+                    </Button>
+                </div>
             </div>
         )
     }

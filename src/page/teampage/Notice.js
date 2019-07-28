@@ -24,12 +24,24 @@ class Notice extends Component {
         board: []
     }
 
+    getBoard = async () => {
+        const path = `${process.env.REACT_APP_SERVER_URI}/team/board/${this.props.teamSelected}`;
+        const result = await axios.get(path);
+        let boardData = result.data;
+        if (boardData.length > 0) {
+            boardData.sort((o1, o2) => (new Date(o2.createdAt) - new Date(o1.createdAt)))
+            this.setState({
+                board: boardData
+            })
+        }
+        console.log(boardData);
+    }
+
     handlePostClick = () => {
         this.props.history.push('/enter/board/post');
     }
 
     handleCardClick = (event) => {
-        console.log(event.currentTarget.id);
         const eventId = event.currentTarget.id;
         if (Boolean(this.state[eventId])){
             this.setState({
@@ -52,12 +64,12 @@ class Notice extends Component {
         this.setState({
             member: memberList.data
         })
-        console.log(memberList);
         return memberList;
     }
 
     componentDidMount() {
         this.getMemberList();
+        this.getBoard();
     }
 
     render() {
@@ -131,8 +143,7 @@ class Notice extends Component {
                                             secondary={
                                                 <React.Fragment>
                                                     <Typography
-                                                        variant="body2"
-                                                        
+                                                        variant="body2"               
                                                     >
                                                         {Boolean(member.job)?member.job:'Free'}
                                                     </Typography>
@@ -163,58 +174,51 @@ class Notice extends Component {
                 <div className="board" style={style.childRoot}>
                     <Typography variant="h3">board</Typography>
                     <IconButton onClick={this.handlePostClick} style={{alignSelf: 'flex-end', color: "skyblue"}}><AddButton/></IconButton>
-                    <Card style={style.card}>
-                        <CardHeader 
-                            avatar={<Avatar>
-                                D
-                            </Avatar>}
-                            action={
-                                <React.Fragment>
-                                    <IconButton>
-                                        <Badge badgeContent={10} color="secondary">
-                                            <FavoriteBorderIcon fontSize="medium"/>
-                                        </Badge>
-                                    </IconButton>
-                                    <IconButton><MoreVertIcon/></IconButton>
-                                </React.Fragment>
-                            }
-                            title={"Title"}
-                            subheader={"subheader in here"}
-                        />
-                        <CardContent style={{display: 'none'}}>
-                            test Content 22
-                        </CardContent>
-                        <ExpandMoreIcon 
-                            style={{alignSelf: 'center'}}
-                            id={"1235"}
-                            onClick={this.handleCardClick}
-                        />
-                    </Card>
-
-                    <Card style={style.card}>
-                        <CardHeader 
-                            avatar={<Avatar>
-                                D
-                            </Avatar>}
-                            action={
-                                <React.Fragment>
-                                    <IconButton>
-                                        <Badge badgeContent={10} color="secondary">
-                                            <FavoriteBorderIcon fontSize="medium"/>
-                                        </Badge>
-                                    </IconButton>
-                                    <IconButton><MoreVertIcon/></IconButton>
-                                </React.Fragment>
-                            }
-                            title={"Title"}
-                            subheader={"subheader in here"}
-                            id={"1234"}
-                            onClick={this.handleCardClick}
-                        />
-                        <CardContent style={{display: 'none'}}>
-                            test Content
-                        </CardContent>
-                    </Card>
+                    <List>
+                        {this.state.board.map((item, idx) => {
+                            const thumbnailPath = `${process.env.REACT_APP_SERVER_URI}/account/${item.userId}/thumbnail.png`;
+                            return (
+                            <Card key={idx} style={style.card}>
+                                <CardHeader 
+                                avatar={<Avatar alt="thumbnail"
+                                            src={thumbnailPath}>
+                                    D
+                                </Avatar>}
+                                action={
+                                    <React.Fragment>
+                                        <IconButton>
+                                            <Badge badgeContent={item.like.count} color="secondary">
+                                                <FavoriteBorderIcon fontSize="medium"/>
+                                            </Badge>
+                                        </IconButton>
+                                        <IconButton><MoreVertIcon/></IconButton>
+                                    </React.Fragment>
+                                }
+                                title={item.title}
+                                subheader={item.createdAt}
+                                />
+                                <CardContent style={{display: 'none'}}>
+                                    {item.content}
+                                </CardContent>
+                                {
+                                    Boolean(this.state[`${item._id}`])
+                                    ?
+                                    <ExpandLessIcon
+                                        style={{alignSelf: 'center'}}
+                                        id={item._id}
+                                        onClick={this.handleCardClick}
+                                    />
+                                    :
+                                    <ExpandMoreIcon 
+                                        style={{alignSelf: 'center'}}
+                                        id={item._id}
+                                        onClick={this.handleCardClick}
+                                    />
+                                }
+                            </Card>
+                            )
+                        })}
+                    </List>
                 </div>
             </div>
         )

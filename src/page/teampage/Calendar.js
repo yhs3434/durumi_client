@@ -3,8 +3,14 @@ import {Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@mat
 import Paper from '@material-ui/core/Paper';
 import { ArrowBackIos, ArrowForwardIos, ChevronLeft, ChevronRight } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
-import Popper from '@material-ui/core/Popper';
-import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker
+} from '@material-ui/pickers';
 
 class Calendar extends Component {
     state = {
@@ -18,7 +24,16 @@ class Calendar extends Component {
         thisMonth: {
             firstDay: -1
         },
-        popperAnchorEl: null
+        popperAnchorEl: null,
+        selected: null,
+        addSchedule: null,
+        newSchedule: {
+            when: new Date()
+        },
+        schedule: [],
+        schedules: {
+            init: true
+        }
     }
 
     initToday = async () => {
@@ -29,7 +44,7 @@ class Calendar extends Component {
         const firstDayBefore = todayObj.getDay() - gap;
         const firstDay = ((firstDayBefore%7)+7)%7;
 
-        await this.setState({
+        this.setState({
             date: todayObj.getDate(),
             month: todayObj.getMonth() + 1,
             year: todayObj.getFullYear(),
@@ -70,6 +85,68 @@ class Calendar extends Component {
                 return 30;
             }
         }
+    }
+
+    handleAddScheduleSubmitClicked = () => {
+        const hourBefore = this.state.newSchedule.when.getHours();
+        let hour = '';
+        if (hourBefore > 12) {
+            hour = `PM ${hourBefore-12}`;
+        } else {
+            hour = `AM ${hourBefore}`;
+        }
+        const minute = this.state.newSchedule.when.getMinutes();
+
+        let newWhen = `${hour}:${minute}`
+        let newSchedule = {
+            what: this.state.newSchedule.what,
+            when: newWhen,
+            where: this.state.newSchedule.where
+        };
+
+        const newScheduleDate = `${this.state.selected.year}-${this.state.selected.month}-${this.state.selected.date}`;
+
+        Boolean(this.state.schedules[newScheduleDate])
+        ?
+        this.setState({
+            schedules: {
+                ...this.state.schedules,
+                [newScheduleDate]: [...this.state.schedules[newScheduleDate], newSchedule]
+            }
+        })
+        :
+        this.setState({
+            schedules: {
+                ...this.state.schedules,
+                [newScheduleDate]: [newSchedule]
+            }
+        })
+
+
+        this.setState({
+            newSchedule: {
+                when: new Date()
+            },
+        });
+        this.handleAddScheduleClicked();
+    }
+
+    handleAddScheduleChange = (name) => (event) => {
+        this.setState({
+            newSchedule: {
+                ...this.state.newSchedule,
+                [name]: event.target.value
+            }
+        });
+    }
+
+    handleTimeChange = (time) => {
+        this.setState({
+            newSchedule: {
+                ...this.state.newSchedule,
+                when: time
+            }
+        })
     }
 
     handleArrowRightClick = () => {
@@ -185,63 +262,47 @@ class Calendar extends Component {
         })
     }
 
+    handleCellClick = (event) => {
+        const targetId = event.currentTarget.id;
+        const daySelected = targetId.split('_')[1];
+        const monthSelected = this.state.month;
+        const yearSelected = this.state.year;
+        
+        this.setState({
+            selected: {
+                year: yearSelected,
+                month: monthSelected,
+                date: daySelected
+            }
+        });
+    }
+
+    handleModalClose = () => {
+        this.setState({
+            selected: null
+        })
+    }
+
+    handleAddScheduleClicked = () => {
+        if (Boolean(this.state.addSchedule)) {
+            this.setState({
+                addSchedule: null
+            });
+        } else {
+            this.setState({
+                addSchedule: true
+            })
+        }
+    }
+
     componentWillMount() {
         this.initToday();
     }
 
     componentDidMount() {
-        this.componentDidUpdate();
-        /*
-        let month_elem = document.getElementById('month');
-        month_elem.innerHTML = '' + this.state.month + '월';
-        let year_elem = document.getElementById('year');
-        year_elem.innerHTML = '' + this.state.year;
-
-        let cellId = '';
-        let length = this.xDaysInMonth(this.state.year, this.state.month);
-
-        for(let i=0; i<length; i++){
-            cellId = 'cell_' + (this.state.firstDay + i);
-            let cell = document.getElementById(cellId);
-            cell.innerHTML = '' + (i+1);
-        }
-        const todayCellId = 'cell_'+this.state.date;
-        const todayCell = document.getElementById(todayCellId);
-        todayCell.setAttribute('style', "font-size: xx-large;");
-        */
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState !== this.state){
-            let month_elem = document.getElementById('month');
-            month_elem.innerHTML = '' + this.state.month + '월';
-            let year_elem = document.getElementById('year');
-            year_elem.innerHTML = '' + this.state.year;
-
-            for(let i=0; i<42; i++){
-                let cell = document.getElementById('cell_'+i);
-                cell.innerText = '';
-                cell.setAttribute('style', "");
-            }
-
-            let cellId = '';
-            let length = this.xDaysInMonth(this.state.year, this.state.month);
-            for(let i=0; i<length; i++){
-                cellId = 'cell_' + (this.state.firstDay + i);
-                let cell = document.getElementById(cellId);
-                cell.innerHTML = '' + (i+1);
-                // let newHTML = `<button class="MuiButtonBase-root MuiButton-root MuiButton-text" tabindex="0" type="button"><span class="MuiButton-label">${i+1}</span><span class="MuiTouchRipple-root"></span></button>`;
-                // cell.innerHTML = newHTML;
-            }
-            
-            if((document.getElementById('cell_35')).innerHTML === '') {
-                let rows = document.getElementsByClassName('MuiTableRow-root');
-                let lastRow = rows[rows.length - 1];
-                for (let i=0; i<lastRow.children.length; i++) {
-                    lastRow.children[i].style.display = "none";
-                }
-            }
-        }
     }
 
     render() {
@@ -255,133 +316,219 @@ class Calendar extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center'
+            },
+            arrowField2: {
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.5rem'
+            },
+            headCell:{
+                paddingLeft: '1rem',
+                paddingRight: '1rem'
+            },
+            cell: {
+                paddingTop: '2.5rem',
+                paddingBottom: '2.5rem',
+                paddingLeft: '0.1rem',
+                paddingRight: '0.1rem',
+                fontSize: '1.3em'
+            },
+            modalRoot: {
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            },
+            modalPaper: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: "60%",
+                maxHeight: "95%",
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '1rem'
+            },
+            modalTypographyContainer: {
+                display: 'inline-flex',
+                flexDirection: 'row',
+                width: '80%',
+                flexGrow: 1,
+                alignItems: 'center'
+            },
+            modalListContainer: {
+                display: 'inline-flex',
+                flexDirection: 'column',
+                flexWrap: 'wrap',
+                flexGrow: 4,
+                justifyContent: 'center',
+                overflow: 'auto'
+            },
+            modalPortalContainer: {
+                flexGrow: 1,
+                width: '80%',
+                display: 'inline-flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                border: 'thin solid #50fbf3',
+                marginTop: '1rem',
+                marginBottom: '1rem',
+                padding: '1rem'
+            },
+            modalScheduleList: {
+                flexWrap: 'wrap'
+            },
+            textField: {
+                width: "90%"
             }
         }
+
+        let items = [];
+        let rows = 0;
+        for(let i=0; i<this.state.firstDay; i++) {
+            items.push(<TableCell style={style.cell}></TableCell>);
+        }
+        for(let i=0;i<this.xDaysInMonth(this.state.year, this.state.month);i++) {
+            if (i%7 === (6-this.state.firstDay)) {
+                rows += 1;
+            }
+            items.push(<TableCell align="center" style={style.cell}>
+                {(this.state.year === new Date().getFullYear() && this.state.month === (new Date().getMonth()+1) && (i+1) === (new Date().getDate()))
+                ?
+                    <Button id={`today_${i+1}`} style={{backgroundColor: 'red'}} onClick={this.handleCellClick}>{i+1}</Button>
+                :
+                    <Button id={`day_${i+1}`} onClick={this.handleCellClick}>{i+1}</Button>
+                }
+            </TableCell>);
+        }
+        let itemsRow = [];
+        for (let i=0;i<=rows;i++){
+            itemsRow.push(items.slice(7*i, 7*(i+1)));
+        }
+
+        let selectedDay = '';
+        if (Boolean(this.state.selected)) {
+            selectedDay = `${this.state.selected.year}-${this.state.selected.month}-${this.state.selected.date}`;
+        }
+
         return(
             <div>
                 <div style={style.arrowField}>
                     <Button onClick={this.handleChevronLeftClick}><ChevronLeft /></Button>
-                    <Typography id='year'></Typography>
+                    <Typography id='year'>{`${this.state.year}`}</Typography>
                     <Button onClick={this.handleChevronRightClick}><ChevronRight /></Button>
                 </div>
-                <div style={style.arrowField}>
+                <div style={style.arrowField2}>
                     <Button onClick={this.handleArrowLeftClick}><ArrowBackIos /></Button>
-                    <Typography style={style.month} id='month'></Typography>
+                    <Typography style={style.month} id='month'>{`${this.state.month} 월`}</Typography>
                     <Button onClick={this.handleArrowRightClick}><ArrowForwardIos /></Button>
                 </div>
+
                 <div>
-                    <Popper open={Boolean(this.state.popperAnchorEl)}
-                        anchorEl={this.state.popperAnchorEl} transition>
-                            {({TransitionProps}) => (
-                                <Fade {...TransitionProps} timeout={350}>
-                                    <Paper>
-                                        <div>
-                                            <table>
-                                                <thead></thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>2</td>
-                                                        <td>3</td>
-                                                        <td>4</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>5</td>
-                                                        <td>6</td>
-                                                        <td>7</td>
-                                                        <td>8</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>9</td>
-                                                        <td>10</td>
-                                                        <td>11</td>
-                                                        <td>12</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </Paper>
-                                </Fade>
-                            )}
-                        </Popper>
+                    <Paper>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell style={style.headCell} align='center'>일</TableCell>
+                                    <TableCell style={style.headCell} align='center'>월</TableCell>
+                                    <TableCell style={style.headCell} align='center'>화</TableCell>
+                                    <TableCell style={style.headCell} align='center'>수</TableCell>
+                                    <TableCell style={style.headCell} align='center'>목</TableCell>
+                                    <TableCell style={style.headCell} align='center'>금</TableCell>
+                                    <TableCell style={style.headCell} align='center'>토</TableCell>       
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {itemsRow.map((item, idx) => {
+                                    return (
+                                        <TableRow>
+                                            {item}
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </Paper>
                 </div>
 
-                <Paper>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align='center'>일</TableCell>
-                                <TableCell align='center'>월</TableCell>
-                                <TableCell align='center'>화</TableCell>
-                                <TableCell align='center'>수</TableCell>
-                                <TableCell align='center'>목</TableCell>
-                                <TableCell align='center'>금</TableCell>
-                                <TableCell align='center'>토</TableCell>       
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell id={'cell_0'} align='center'></TableCell>
-                                <TableCell id={'cell_1'} align='center'></TableCell>
-                                <TableCell id={'cell_2'} align='center'></TableCell>
-                                <TableCell id={'cell_3'} align='center'></TableCell>
-                                <TableCell id={'cell_4'} align='center'></TableCell>
-                                <TableCell id={'cell_5'} align='center'></TableCell>
-                                <TableCell id={'cell_6'} align='center'></TableCell>
-                                
-                            </TableRow>
-                            <TableRow>
-                                <TableCell id={'cell_7'} align='center'></TableCell>
-                                <TableCell id={'cell_8'} align='center'></TableCell>
-                                <TableCell id={'cell_9'} align='center'></TableCell>
-                                <TableCell id={'cell_10'} align='center'></TableCell>
-                                <TableCell id={'cell_11'} align='center'></TableCell>
-                                <TableCell id={'cell_12'} align='center'></TableCell>
-                                <TableCell id={'cell_13'} align='center'></TableCell>
-                                
-                            </TableRow>
-                            <TableRow>
-                                <TableCell id={'cell_14'} align='center'></TableCell>
-                                <TableCell id={'cell_15'} align='center'></TableCell>
-                                <TableCell id={'cell_16'} align='center'></TableCell>
-                                <TableCell id={'cell_17'} align='center'></TableCell>
-                                <TableCell id={'cell_18'} align='center'></TableCell>
-                                <TableCell id={'cell_19'} align='center'></TableCell>
-                                <TableCell id={'cell_20'} align='center'></TableCell>
-                                
-                            </TableRow>
-                            <TableRow>
-                                <TableCell id={'cell_21'} align='center'></TableCell>
-                                <TableCell id={'cell_22'} align='center'></TableCell>
-                                <TableCell id={'cell_23'} align='center'></TableCell>
-                                <TableCell id={'cell_24'} align='center'></TableCell>
-                                <TableCell id={'cell_25'} align='center'></TableCell>
-                                <TableCell id={'cell_26'} align='center'></TableCell>
-                                <TableCell id={'cell_27'} align='center'></TableCell>
-                                
-                            </TableRow>
-                            <TableRow>
-                                <TableCell id={'cell_28'} align='center'></TableCell>
-                                <TableCell id={'cell_29'} align='center'></TableCell>
-                                <TableCell id={'cell_30'} align='center'></TableCell>
-                                <TableCell id={'cell_31'} align='center'></TableCell>
-                                <TableCell id={'cell_32'} align='center'></TableCell>
-                                <TableCell id={'cell_33'} align='center'></TableCell>
-                                <TableCell id={'cell_34'} align='center'></TableCell>
-                                
-                            </TableRow>
-                            <TableRow>
-                                <TableCell id={'cell_35'} align='center'></TableCell>
-                                <TableCell id={'cell_36'} align='center'></TableCell>
-                                <TableCell id={'cell_37'} align='center'></TableCell>
-                                <TableCell id={'cell_38'} align='center'></TableCell>
-                                <TableCell id={'cell_39'} align='center'></TableCell>
-                                <TableCell id={'cell_40'} align='center'></TableCell>
-                                <TableCell id={'cell_41'} align='center'></TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </Paper>
+                <div>
+                    <Modal style={style.modalRoot} onClose={this.handleModalClose} open={Boolean(this.state.selected)}>
+                        {
+                            Boolean(this.state.selected)
+                            ?
+                            <Paper style={style.modalPaper}>
+                                <div style={style.modalTypographyContainer}>
+                                    <Typography>{selectedDay}</Typography>
+                                    <Button onClick={this.handleAddScheduleClicked} variant="contained" color="primary" style={{marginLeft: 'auto'}}>Add</Button>
+                                </div>
+                                {
+                                    Boolean(this.state.addSchedule)
+                                    ?
+                                    <div style={style.modalPortalContainer}>
+                                        <TextField
+                                            label="what"
+                                            onChange={this.handleAddScheduleChange('what')}
+                                            value={this.state.newSchedule.what}
+                                            style={style.textField}
+                                        />
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="mui-pickers-time"
+                                                label="when"
+                                                onChange={this.handleTimeChange}
+                                                value={this.state.newSchedule.when}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                                style={style.textField}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                        <TextField
+                                            label="where"
+                                            onChange={this.handleAddScheduleChange('where')}
+                                            value={this.state.newSchedule.where}
+                                            style={style.textField}
+                                        />
+                                        <Button 
+                                            variant="contained" 
+                                            style={{marginTop: '1rem'}}
+                                            onClick={this.handleAddScheduleSubmitClicked}
+                                        >Add</Button>
+                                    </div>
+                                    :
+                                    ""
+                                }
+                                <div style={style.modalListContainer}>
+                                    <List style={style.modalScheduleList}>
+                                        
+                                        {
+                                            Boolean(this.state.schedules)
+                                            ?
+                                            (
+                                                Boolean(this.state.schedules[selectedDay])
+                                                ?
+                                                this.state.schedules[selectedDay].map((item, idx) => (
+                                                    <ListItem button>
+                                                        <ListItemText primary={item.what}/>
+                                                        <ListItemText primary={item.when.toString()}/>
+                                                    </ListItem>
+                                                ))
+                                                :
+                                                ''
+                                            )
+                                            :
+                                            ''
+                                        }
+                                    </List>
+                                </div>
+                            </Paper>
+                            :
+                            ""
+                        }
+                    </Modal>
+                </div>
             </div>
         )
     }

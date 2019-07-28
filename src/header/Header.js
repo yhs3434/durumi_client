@@ -73,7 +73,7 @@ class Header extends Component {
             menu: {
                 button: {
                     backgroundColor: 'transparent',
-                    color: 'white'  
+                    color: '#00B6C2'  
                 },
                 box: {
                     marginRight: '1rem'
@@ -97,7 +97,7 @@ class Header extends Component {
                 },
             },
             appBar: {
-                background: 'linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)',
+                background: 'linear-gradient(80deg, #F0F0FF 30%, #50fbf3 90%)',
                 transition: theme.transitions.create(['margin', 'width'], {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.leavingScreen,
@@ -105,14 +105,15 @@ class Header extends Component {
             },
             appBarShift: {
                 width: `calc(100% - ${240}px)`,
-                background: 'linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)',
+                background: 'linear-gradient(45deg, #F0F0FF 30%, #50fbf3 90%)',
                 transition: theme.transitions.create(['margin', 'width'], {
                     easing: theme.transitions.easing.easeOut,
                     duration: theme.transitions.duration.enteringScreen,
                 }),
             },
             typography: {
-                marginLeft: '1rem'
+                marginLeft: '1rem',
+                color: '#00B6C2'
             },
             menuList: {
                 border: '1px solid #d3d4d5'
