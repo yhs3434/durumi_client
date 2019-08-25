@@ -13,6 +13,7 @@ import Card from '@material-ui/core/Card';
 
 class Chat extends Component {
     state = {
+        ws: null,
         message: [],
         prevMessage: [],
         inputValue: ""
@@ -27,6 +28,48 @@ class Chat extends Component {
     scrollBottom = () => {
         let obj = document.documentElement;
         obj.scrollTop = obj.scrollHeight;
+    }
+
+    waitForSocketConnection = (socket, callback) => {
+        setTimeout(
+            () => {
+                if(socket.readyState === 1) {
+                    if (callback!=null) {
+                        callback();
+                    }
+                } else {
+                    this.waitForSocketConnection(socket, callback);
+                }
+            }
+        , 5);
+    }
+
+    connectWebSocket = () => {
+        if(Boolean(this.props.teamSelected)) {
+            const path = `${process.env.REACT_APP_WEBSOCKET_URI}/${this.props.teamSelected}`;
+            const ws = new WebSocket(path);
+            ws.onopen = () => {
+                console.log('websocket is connected');
+            }
+            ws.onmessage = (message) => {
+                this.setState({
+                    message: this.state.message.concat(message.data)
+                });
+            };
+            ws.onclose = () => {
+                console.log('websocket is disconnected');
+            }
+            
+            this.waitForSocketConnection(ws, () => {
+                if(Boolean(this.state.ws)){
+                    this.state.ws.send(`${Date.now()}_$_${this.props.userObject._id}_$_${this.props.teamSelected}_$_${'init'}_$_t`);
+                }
+            });
+            
+            this.setState({
+                ws: ws
+            });
+        }
     }
 
 
@@ -68,9 +111,7 @@ class Chat extends Component {
         }
 
         try {
-            
             const result = await axios.post(url, data);
-            console.log('inputToServer', result);
             if (result.status === 200) {
                 this.messageToState();
             }
@@ -87,7 +128,10 @@ class Chat extends Component {
     }
 
     handleInputSendClick = () => {
-        this.inputToServer(this.state.inputValue);
+        // this.inputToServer(this.state.inputValue);
+        if(Boolean(this.state.ws) && this.state.ws.readyState === 1) {
+            this.state.ws.send(`${Date.now()}_$_${this.props.userObject._id}_$_${this.props.teamSelected}_$_${this.state.inputValue}_$_t`);
+        }
         this.setState({
             inputValue: ''
         })
@@ -96,11 +140,20 @@ class Chat extends Component {
     
 
     componentDidMount() {
-        this.messageToState();
+        this.connectWebSocket();
         this.scrollBottom();
     }
 
     componentDidUpdate(prevProp, prevState) {
+    }
+
+    componentWillUnmount() {
+        if(Boolean(this.state.ws)) {
+            this.state.ws.close();
+        }
+        this.setState({
+            ws: null
+        })
     }
     
 
@@ -147,9 +200,12 @@ class Chat extends Component {
                 <div style={style.chatArea} id="chatArea">
                     {
                         this.state.message.map((message, idx) => {
-                            console.log(message);
-                            if (message.userId === this.props.userObject._id) {
-                                console.log('same');
+                            const messageArray = message.split('_$_');
+                            const messageTime = messageArray[0];
+                            const messageUser = messageArray[1];
+                            const messageData = messageArray[3];
+                            if (messageUser === this.props.userObject._id) {
+                                
                                 return (
                                     <React.Fragment>
                                         <Card style={style.myListItem}>
@@ -160,8 +216,8 @@ class Chat extends Component {
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText
-                                                    primary={message.message}
-                                                    secondary={`나 ${message.createdAt}`}
+                                                    primary={messageData}
+                                                    secondary={`나 ${messageTime}`}
                                                 />
                                             </ListItem>
                                         </Card>
@@ -179,8 +235,8 @@ class Chat extends Component {
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText
-                                                    primary={message.message}
-                                                    secondary={`${message.userId} ${message.createdAt}`}
+                                                    primary={messageData}
+                                                    secondary={`${messageUser} ${messageTime}`}
                                                 />
                                             </ListItem>
                                         </Card>

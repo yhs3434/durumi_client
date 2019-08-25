@@ -137,7 +137,7 @@ class Header extends Component {
                                 </IconButton>
                                 
                                 <Typography variant='h5' style={style.typography}>
-                                    DURUMI
+                                    ST ART
                                 </Typography>
                                 
                             </div>

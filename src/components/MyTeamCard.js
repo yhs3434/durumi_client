@@ -34,7 +34,7 @@ export default function MyTeamCard(props) {
       <CardActionArea onClick={handleSelect}>
             <CardMedia
             className={classes.media}
-            image={team.profile.thumbnail}
+            image={`${process.env.REACT_APP_SERVER_URI}/team/${team._id}/thumbnail.png`}
             title={team.profile.name}
             />
             <CardContent>
@@ -46,11 +46,6 @@ export default function MyTeamCard(props) {
                 </Typography>
             </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary" variant="contained">
-          입장
-        </Button>
-      </CardActions>
     </Card>
   );
 }

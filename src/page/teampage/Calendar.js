@@ -11,6 +11,10 @@ import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
 } from '@material-ui/pickers';
+import DoneIcon from '@material-ui/icons/Done';
+import {Menu, MenuItem} from '@material-ui/core';
+import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
+import axios from 'axios';
 
 class Calendar extends Component {
     state = {
@@ -28,12 +32,16 @@ class Calendar extends Component {
         selected: null,
         addSchedule: null,
         newSchedule: {
-            when: new Date()
+            what: '',
+            when: new Date(),
+            where: ''
         },
         schedule: [],
         schedules: {
             init: true
-        }
+        },
+        listItemAnchor: null,
+        scheduleSelectedId: ''
     }
 
     initToday = async () => {
@@ -122,6 +130,11 @@ class Calendar extends Component {
             }
         })
 
+        newSchedule.newScheduleDate = newScheduleDate;
+
+        if(Boolean(this.props.teamSelected)) {
+            axios.post(`${process.env.REACT_APP_SERVER_URI}/team/calendar/${this.props.teamSelected}`, newSchedule).then((result) => {console.log(result)});
+        }
 
         this.setState({
             newSchedule: {
@@ -277,6 +290,35 @@ class Calendar extends Component {
         });
     }
 
+    handleListItemClick = (event) => {
+        this.setState({
+            listItemAnchor: event.currentTarget,
+            scheduleSelectedId: event.currentTarget.id
+        })
+    }
+
+    handleListItemClose = () => {
+        this.setState({
+            listItemAnchor: null
+        })
+    }
+
+    handleListItemRemoveClick = (event) => {
+        const listItemId = parseInt(this.state.scheduleSelectedId.split('_')[1]);
+        let selectedDay = '';
+        if (Boolean(this.state.selected)) {
+            selectedDay = `${this.state.selected.year}-${this.state.selected.month}-${this.state.selected.date}`;
+        }
+
+        const schedulesLength = this.state.schedules[selectedDay].length;
+        this.setState({
+            schedules: {
+                ...this.state.schedules,
+                [selectedDay]: [...this.state.schedules[selectedDay].slice(0, listItemId), ...this.state.schedules[selectedDay].slice(listItemId+1, schedulesLength)]
+            }
+        });
+    }
+
     handleModalClose = () => {
         this.setState({
             selected: null
@@ -300,6 +342,34 @@ class Calendar extends Component {
     }
 
     componentDidMount() {
+        if(Boolean(this.props.teamSelected)) {
+            axios.get(`${process.env.REACT_APP_SERVER_URI}/team/calendar/${this.props.teamSelected}`).then((result) => {
+                for (let i=0; i<result.data.length; i++){
+                    const newScheduleDate = result.data[i].newScheduleDate;
+                    let newSchedule = {};
+                    newSchedule.what = result.data[i].what;
+                    newSchedule.when = result.data[i].when;
+                    newSchedule.where = result.data[i].where;
+
+                    Boolean(this.state.schedules[newScheduleDate])
+                    ?
+                    this.setState({
+                        schedules: {
+                            ...this.state.schedules,
+                            [newScheduleDate]: [...this.state.schedules[newScheduleDate], newSchedule]
+                        }
+                    })
+                    :
+                    this.setState({
+                        schedules: {
+                            ...this.state.schedules,
+                            [newScheduleDate]: [newSchedule]
+                        }
+                    })
+                }
+                
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -510,7 +580,8 @@ class Calendar extends Component {
                                                 Boolean(this.state.schedules[selectedDay])
                                                 ?
                                                 this.state.schedules[selectedDay].map((item, idx) => (
-                                                    <ListItem button>
+                                                    <ListItem id={`schedule_${idx}`} button onClick={this.handleListItemClick} key={idx}>
+                                                        <ListItemIcon><DoneIcon /></ListItemIcon>
                                                         <ListItemText primary={item.what}/>
                                                         <ListItemText primary={item.when.toString()}/>
                                                     </ListItem>
@@ -522,6 +593,31 @@ class Calendar extends Component {
                                             ''
                                         }
                                     </List>
+                                </div>
+                                <div>
+                                    <Menu
+                                        anchorEl={this.state.listItemAnchor}
+                                        keepMounted
+                                        open={Boolean(this.state.listItemAnchor)}
+                                        onClose={this.handleListItemClose}
+                                        
+                                        getContentAnchorEl={null}
+                                        anchorOrigin={{
+                                            vertical: 'center',
+                                            horizontal: 'right',
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'center',
+                                            horizontal: 'left',
+                                        }}
+                                    >
+                                        <MenuItem button onClick={this.handleListItemRemoveClick}>
+                                            <ListItemIcon>
+                                                <RemoveIcon/>
+                                            </ListItemIcon>
+                                            <ListItemText primary="remove"/>
+                                        </MenuItem>
+                                    </Menu>
                                 </div>
                             </Paper>
                             :
