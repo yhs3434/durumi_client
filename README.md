@@ -2,14 +2,14 @@
 
 비슷한 꿈을 가진 청년들이 팀을 이룰 수 있도록 도와주는 매칭 및 팀 협력 어플리케이션.
 
-# 개발 중단
+## 개발 중단
 
  개발 중 여자친구와 이별하면서 개발 중단하게 되었습니다. 두루미는 제 여자친구 애칭이었고, 모든 사진들(db 동기화 전 public 사진들)을 두루미 사진으로 해놨었는데, 이젠 더 이상 개발을 하고 싶지 않아져 중단하였습니다.
  허나 청년들의 꿈을 이어주고 싶다는 제 마음은 변하지 않았고, 반드시 다시 시작하여 완성시킬 것 입니다. 2020년 안에 반드시 시작하겠습니다.
  (처음부터 새롭게 만들 생각입니다.)
  
  
- # 설치법
+ ## 설치법
  
  ![image](https://user-images.githubusercontent.com/24651852/73860651-370f0880-487f-11ea-98ae-4eb3555298e9.png)
 ![image](https://user-images.githubusercontent.com/24651852/73860660-3aa28f80-487f-11ea-80f1-10e8319572ec.png)
@@ -17,7 +17,7 @@
 ![image](https://user-images.githubusercontent.com/24651852/73860669-3fffda00-487f-11ea-8965-7e39baff984b.png)
 
 
-# 개발된 상황 사진
+## 개발된 상황 사진
 
 ![image](https://user-images.githubusercontent.com/24651852/73860673-41c99d80-487f-11ea-927a-5a45df0d9c8c.png)
 
